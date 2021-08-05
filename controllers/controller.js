@@ -27,7 +27,7 @@ module.exports = class Library{
             }
             const book = await Books.findOne({_id: bookId})
             if(!book){
-                return res.json('no book is found')
+                return res.json('no book exists')
             }
             const newComment = await Books.findOneAndUpdate({_id: bookId}, {$push: {comments: comment}}, {new: true})
             return res.json(newComment)
@@ -42,7 +42,7 @@ module.exports = class Library{
             const bookId = req.params.id
             const book = await Books.findOne({_id: bookId})
             if(!book){
-                return res.json('no book is found')
+                return res.json('no book exists')
             }
             return res.json(book)
         }
