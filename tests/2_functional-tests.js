@@ -122,7 +122,7 @@ suite('Functional Tests', function() {
         chai.request(server)
             .post('api/books/610bcac59dbd633fd44e3644')
             .send({ comment: 'hello, moremi' })
-            .end((err, res) => {
+            .end(function(err, res){
               assert.equal(res.status, 200)
               assert.property(res.body, '_id')
               assert.property(res.body, 'title')
@@ -136,7 +136,7 @@ suite('Functional Tests', function() {
         chai.request(server)
             .post('api/books/610bcac59dbd633fd44e3644')
             .send({ comment: '' })
-            .end((err, res) => {
+            .end(function(err, res){
               assert.equal(res.status, 400)
               assert.equal(res.body, 'missing required field comment')
               done()
@@ -160,7 +160,7 @@ suite('Functional Tests', function() {
 
       test('Test DELETE /api/books/[id] with valid id in db', function(done){
         chai.request(server)
-            .delete('/api/books/610bcac59dbd633fd44e3644')
+            .delete('/api/books/610ca3383747cb01c398d800')
             .end((err, res) => {
               assert.equal(res.status, 200)
               assert.equal(res.body, 'delete successful')
