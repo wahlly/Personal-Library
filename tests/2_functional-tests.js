@@ -61,6 +61,7 @@ suite('Functional Tests', function() {
             .post('/api/books')
             .send({title: ''})
             .end((err, res) => {
+              assert.equal(res.status, 400)
               assert.equal(res.body, 'missing required field title')
               done()
             })
@@ -75,6 +76,7 @@ suite('Functional Tests', function() {
         chai.request(server)
             .get('/api/books')
             .end((err, res) => {
+              assert.equal(res.status, 200)
               assert.isArray(res.body, 'response should be an array')
               assert.property(res.body[0], '_id')
               assert.property(res.body[0], 'title')
@@ -92,6 +94,7 @@ suite('Functional Tests', function() {
         chai.request(server)
             .get('/api/books/610bca9c9dbd633fd44e383e')
             .end((err, res) => {
+              assert.equal(res.status, 404)
               assert.equal(res.body, 'no book exists')
               done()
             })
@@ -101,6 +104,7 @@ suite('Functional Tests', function() {
         chai.request(server)
             .get('/api/books/610bca9c9dbd633fd44e363e')
             .end((err, res) => {
+              assert.equal(res.status, 200)
               assert.property(res.body, '_id')
               assert.property(res.body, 'title')
               assert.property(res.body, 'comments')
@@ -115,13 +119,11 @@ suite('Functional Tests', function() {
     suite('POST /api/books/[id] => add comment/expect book object with id', function(){
       
       test('Test POST /api/books/[id] with comment', function(done){
-        const comment = {
-          comment: 'hello, moremi'
-        }
         chai.request(server)
-            .post('api/books/610bca9c9dbd633fd44e363e')
-            .send(comment)
+            .post('api/books/610bcac59dbd633fd44e3644')
+            .send({ comment: 'hello, moremi' })
             .end((err, res) => {
+              assert.equal(res.status, 200)
               assert.property(res.body, '_id')
               assert.property(res.body, 'title')
               assert.property(res.body, 'comments')
@@ -132,8 +134,10 @@ suite('Functional Tests', function() {
 
       test('Test POST /api/books/[id] without comment field', function(done){
         chai.request(server)
-            .post('api/books/610bca9c9dbd633fd44e363e')
+            .post('api/books/610bcac59dbd633fd44e3644')
+            .send({ comment: '' })
             .end((err, res) => {
+              assert.equal(res.status, 400)
               assert.equal(res.body, 'missing required field comment')
               done()
             })
@@ -144,6 +148,7 @@ suite('Functional Tests', function() {
             .post('/api/books/610bca9c9dbd633fd54e363e')
             .send({ comment: 'hello moremi' })
             .end((err, res) => {
+              assert.equal(res.status, 404)
               assert.equal(res.body, 'no book exists')
               done()
             })
@@ -155,8 +160,9 @@ suite('Functional Tests', function() {
 
       test('Test DELETE /api/books/[id] with valid id in db', function(done){
         chai.request(server)
-            .delete('/api/books/610bcad39dbd633fd44e3646')
+            .delete('/api/books/610bcac59dbd633fd44e3644')
             .end((err, res) => {
+              assert.equal(res.status, 200)
               assert.equal(res.body, 'delete successful')
               done()
             })
@@ -164,8 +170,9 @@ suite('Functional Tests', function() {
 
       test('Test DELETE /api/books/[id] with  id not in db', function(done){
         chai.request(server)
-            .delete('/api/books/610bcad39dbd633fd44e9646')
+            .delete('/api/books/610c93c119f98c3fa414687e')
             .end((err, res) => {
+              assert.equal(res.status, 404)
               assert.equal(res.body, 'no book exists')
               done()
             })

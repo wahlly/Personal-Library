@@ -7,10 +7,10 @@ module.exports = class Library{
             const bookTitle = req.body.title
             const { isValid, error } = await Validator.addBook(bookTitle)
             if(!isValid){
-                return res.json(error.msg)
+                return res.status(400).json(error.msg)
             }
             const newBook = await Books.create({title: bookTitle})
-            return res.json({title: newBook.title, _id: newBook.id})
+            return res.status(200).json({title: newBook.title, _id: newBook.id})
         }
         catch(err){
             return res.status(500).json(err.message);
@@ -23,14 +23,14 @@ module.exports = class Library{
             const comment = req.body.comment
             const { isValid, error } = await Validator.addComment(comment)
             if(!isValid){
-                return res.json(error.msg)
+                return res.status(400).json(error.msg)
             }
             const book = await Books.findOne({_id: bookId})
             if(!book){
-                return res.json('no book exists')
+                return res.status(404).json('no book exists')
             }
             const newComment = await Books.findOneAndUpdate({_id: bookId}, {$push: {comments: comment}}, {new: true})
-            return res.json(newComment)
+            return res.status(200).json(newComment)
         }
         catch(err){
             return res.status(500).json(err.message);
@@ -42,9 +42,9 @@ module.exports = class Library{
             const bookId = req.params.id
             const book = await Books.findOne({_id: bookId})
             if(!book){
-                return res.json('no book exists')
+                return res.status(404).json('no book exists')
             }
-            return res.json(book)
+            return res.status(200).json(book)
         }
         catch(err){
             return res.status(500).json(err.message);
@@ -62,7 +62,7 @@ module.exports = class Library{
                     commentcount: book.comments.length
                 })
             })
-            return res.json(bookList)
+            return res.status(200).json(bookList)
         }
         catch(err){
             return res.status(500).json(err.message);
@@ -74,10 +74,10 @@ module.exports = class Library{
             const bookId = req.params.id
             const book = await Books.findOne({_id: bookId})
             if (!book) {
-                return res.json('no book exists')
+                return res.status(404).json('no book exists')
             }
             await Books.deleteOne({_id: bookId})
-            return res.json('delete successful')
+            return res.status(200).json('delete successful')
         }
         catch(err) {
             return res.status(500).json(err.message);
@@ -87,7 +87,7 @@ module.exports = class Library{
     static async deleteAllBooks(req, res){
         try{
             await Books.deleteMany({})
-            return res.json('complete delete successful')
+            return res.status(200).json('complete delete successful')
         }
         catch(err){
             return res.status(500).json(err.message);
