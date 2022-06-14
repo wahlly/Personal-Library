@@ -1,11 +1,3 @@
-/*
-*
-*
-*       FILL IN EACH FUNCTIONAL TEST BELOW COMPLETELY
-*       -----[Keep the tests in the same order!]-----
-*       
-*/
-
 const chaiHttp = require('chai-http');
 const chai = require('chai');
 const assert = chai.assert;
@@ -16,7 +8,6 @@ chai.use(chaiHttp);
 suite('Functional Tests', function() {
 
   /*
-  * ----[EXAMPLE TEST]----
   * Each test should completely test the response of the API end-point including response status code!
   */
   test('#example Test GET /api/books', function(done){
